@@ -1,0 +1,328 @@
+app:
+  description: 'データセットのリストを取得する。
+
+    戻り値の型 : Array[Object]'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Get Dataset List
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.1.5
+workflow:
+  conversation_variables: []
+  environment_variables:
+  - description: ''
+    id: 277d7c19-c7d8-4b11-9bbc-ec34e8fcd801
+    name: SECRET_KEY
+    selector:
+    - env
+    - SECRET_KEY
+    value: dataset-vjqeg9asxk3PZp7JND8hsjEF
+    value_type: string
+  - description: ''
+    id: f56dbd69-4915-4532-ac80-2046541f4ebc
+    name: BASE_URL
+    selector:
+    - env
+    - BASE_URL
+    value: http://192.168.33.10/v1/datasets
+    value_type: string
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: http-request
+      id: 1744344674761-source-1744344788187-target
+      source: '1744344674761'
+      sourceHandle: source
+      target: '1744344788187'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: 1744344788187-source-1744345092404-target
+      source: '1744344788187'
+      sourceHandle: source
+      target: '1744345092404'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1744345092404-source-1744344680107-target
+      source: '1744345092404'
+      sourceHandle: source
+      target: '1744344680107'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: template-transform
+      id: 1744344788187-fail-branch-1744345577715-target
+      source: '1744344788187'
+      sourceHandle: fail-branch
+      target: '1744345577715'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1744345577715-source-1744345635323-target
+      source: '1744345577715'
+      sourceHandle: source
+      target: '1744345635323'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables: []
+      height: 54
+      id: '1744344674761'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1744345092404'
+          - dataset_list
+          variable: dataset_list
+        selected: false
+        title: 終了
+        type: end
+      height: 90
+      id: '1744344680107'
+      position:
+        x: 984
+        y: 282
+      positionAbsolute:
+        x: 984
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data: []
+          type: none
+        desc: ''
+        error_strategy: fail-branch
+        headers: Authorization:Bearer {{#env.SECRET_KEY#}}
+        method: get
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Get Dataset List
+        type: http-request
+        url: '{{#env.BASE_URL#}}'
+        variables: []
+      height: 158
+      id: '1744344788187'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\ndef main(body: str) -> dict:\n    json_data = json.loads(body)\n\
+          \    dataset_list = json_data['data']\n    return {\n        \"dataset_list\"\
+          : dataset_list\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          dataset_list:
+            children: null
+            type: array[object]
+        selected: false
+        title: リスト抽出
+        type: code
+        variables:
+        - value_selector:
+          - '1744344788187'
+          - body
+          variable: body
+      height: 54
+      id: '1744345092404'
+      position:
+        x: 684
+        y: 282
+      positionAbsolute:
+        x: 684
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: T Aoki
+        desc: ''
+        height: 175
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<引数>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"なし","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<戻り値>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dataset_list
+          : Array[Object]","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 273
+      height: 175
+      id: '1744345340547'
+      position:
+        x: 80
+        y: 431.5
+      positionAbsolute:
+        x: 80
+        y: 431.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 273
+    - data:
+        desc: ''
+        selected: false
+        template: "{{ error_type }}\r\n{{ error_message }}"
+        title: エラーメッセージ生成
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1744344788187'
+          - error_type
+          variable: error_type
+        - value_selector:
+          - '1744344788187'
+          - error_message
+          variable: error_message
+      height: 54
+      id: '1744345577715'
+      position:
+        x: 684
+        y: 431.5
+      positionAbsolute:
+        x: 684
+        y: 431.5
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1744345577715'
+          - output
+          variable: message
+        selected: false
+        title: 終了
+        type: end
+      height: 90
+      id: '1744345635323'
+      position:
+        x: 984
+        y: 431.5
+      positionAbsolute:
+        x: 984
+        y: 431.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 60.445061574661054
+      y: -139.27425492455836
+      zoom: 1.1486983549970358

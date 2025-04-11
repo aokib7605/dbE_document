@@ -1,0 +1,409 @@
+app:
+  description: '入力された内容に対して適切なデータセットを選択する。
+
+    戻り値の型 : Object'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Select Dataset
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.1.3@74a18ba86ecea3cd6e37eae1a34829691556470d514169abd6a0bcbebecb8fa3
+kind: app
+version: 0.1.5
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: tool
+      id: 1744346206924-source-1744346215812-target
+      source: '1744346206924'
+      sourceHandle: source
+      target: '1744346215812'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1744346215812-source-1744346269187-target
+      source: '1744346215812'
+      sourceHandle: source
+      target: '1744346269187'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1744346269187-source-1744346560811-target
+      source: '1744346269187'
+      sourceHandle: source
+      target: '1744346560811'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1744346560811-source-1744347631259-target
+      source: '1744346560811'
+      sourceHandle: source
+      target: '1744347631259'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1744347631259-source-1744346654260-target
+      source: '1744347631259'
+      sourceHandle: source
+      target: '1744346654260'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - label: query
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: query
+      height: 90
+      id: '1744346206924'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas: []
+        params: {}
+        provider_id: 3df10807-f190-477d-b6ee-43363aa0de8e
+        provider_name: Get Dataset List
+        provider_type: workflow
+        selected: false
+        title: Get Dataset List
+        tool_configurations: {}
+        tool_label: Get Dataset List
+        tool_name: get_dataset_list
+        tool_parameters: {}
+        type: tool
+      height: 54
+      id: '1744346215812'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(json) -> dict:\n    name_list = []\n    for dataset in json[0]['dataset_list']:\n\
+          \        obj = {\n            'name': dataset['name'],\n            'id':\
+          \ dataset['id']\n        }\n        name_list.append(obj)\n    name_str_list\
+          \ = [f\"{item['name']}:{item['id']}\" for item in name_list]\n    name_list_str\
+          \ = \", \".join(name_str_list)\n\n    return {\n        \"name_list\": name_list_str\n\
+          \    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          name_list:
+            children: null
+            type: string
+        selected: false
+        title: Name List 抽出
+        type: code
+        variables:
+        - value_selector:
+          - '1744346215812'
+          - json
+          variable: json
+      height: 54
+      id: '1744346269187'
+      position:
+        x: 384
+        y: 363.5575832047895
+      positionAbsolute:
+        x: 384
+        y: 363.5575832047895
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1744346269187'
+          - name_list
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: gemini-2.0-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: e9ba787a-6df6-4c4e-adc7-306008c74ace
+          role: system
+          text: '下記<Input Query>に対して適切なナレッジのデータセット名を<Name List>から選択し、
+
+            そのidのみを抽出してください。
+
+
+            <Input Query>
+
+            {{#1744346206924.query#}}
+
+
+            <Name List>
+
+            {{#context#}}'
+        - id: 3e6418a2-b233-4fd5-9e32-955f97a2de0d
+          role: user
+          text: '下記<Input Query>に対して適切なナレッジのデータセット名を<Name List>から選択し、
+
+            そのidのみを抽出してください。'
+        selected: true
+        title: Dataset Id 抽出
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1744346560811'
+      position:
+        x: 711.7176013807234
+        y: 363.5575832047895
+      positionAbsolute:
+        x: 711.7176013807234
+        y: 363.5575832047895
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1744347631259'
+          - dataset
+          variable: dataset
+        selected: false
+        title: 終了
+        type: end
+      height: 90
+      id: '1744346654260'
+      position:
+        x: 1408.0185338547008
+        y: 363.5575832047895
+      positionAbsolute:
+        x: 1408.0185338547008
+        y: 363.5575832047895
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(json, dataset_id: str) -> dict:\n    dataset = {}\n    for\
+          \ obj in json[0]['dataset_list']:\n        if obj['id'] == dataset_id.strip():\n\
+          \            dataset = {\n                'id': obj['id'],\n           \
+          \     'name': obj['name']\n            }\n            break\n    return\
+          \ {\n        \"dataset\": dataset\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          dataset:
+            children: null
+            type: object
+        selected: false
+        title: Dataset 取得
+        type: code
+        variables:
+        - value_selector:
+          - '1744346215812'
+          - json
+          variable: json
+        - value_selector:
+          - '1744346560811'
+          - text
+          variable: dataset_id
+      height: 54
+      id: '1744347631259'
+      position:
+        x: 1056.5168372256078
+        y: 363.5575832047895
+      positionAbsolute:
+        x: 1056.5168372256078
+        y: 363.5575832047895
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: T Aoki
+        desc: ''
+        height: 161
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<引数>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"query
+          : 指示や命令","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<戻り値>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dataset
+          : Object","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 240
+      height: 161
+      id: '1744350530399'
+      position:
+        x: 80
+        y: 421.5
+      positionAbsolute:
+        x: 80
+        y: 421.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 240
+    - data:
+        author: T Aoki
+        desc: ''
+        height: 176
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"データセットのリストを取得し、","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"下記の通り、id,nameを持ったobj
+          リストを作成","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dataset_list
+          = [{","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"''id''
+          : ----,","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"''name''
+          ----","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"}]","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 249
+      height: 176
+      id: '1744350797596'
+      position:
+        x: 384
+        y: 447.09256382847207
+      positionAbsolute:
+        x: 384
+        y: 447.09256382847207
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 249
+    - data:
+        author: T Aoki
+        desc: ''
+        height: 194
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"「Name
+          List 抽出」 dataset_list[x][''id''] と","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"「Dataset
+          Id 取得」 dataset_id を見て、適切なデータセットオブジェクトを","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"下記の形で取得","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"{","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"''id''
+          : ----,","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"''name''
+          ----","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"}","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 302
+      height: 194
+      id: '1744350917773'
+      position:
+        x: 1056.5168372256078
+        y: 465.4717375084245
+      positionAbsolute:
+        x: 1056.5168372256078
+        y: 465.4717375084245
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 302
+    viewport:
+      x: 56.45567083628214
+      y: -114.21668328638464
+      zoom: 0.8705505632961241

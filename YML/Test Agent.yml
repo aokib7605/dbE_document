@@ -1,0 +1,108 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: agent-chat
+  name: Test Agent
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.1.3@74a18ba86ecea3cd6e37eae1a34829691556470d514169abd6a0bcbebecb8fa3
+kind: app
+model_config:
+  agent_mode:
+    enabled: true
+    max_iteration: 5
+    prompt: null
+    strategy: function_call
+    tools:
+    - enabled: true
+      notAuthor: false
+      provider_id: 257b16ca-4b0a-4434-b117-4d62f2498b23
+      provider_name: Get Knowledge
+      provider_type: workflow
+      tool_label: Get Knowledge
+      tool_name: get_knowledge
+      tool_parameters: {}
+  annotation_reply:
+    enabled: false
+  chat_prompt_config: {}
+  completion_prompt_config: {}
+  dataset_configs:
+    datasets:
+      datasets: []
+    reranking_enable: false
+    retrieval_model: multiple
+    top_k: 4
+  dataset_query_variable: ''
+  external_data_tools: []
+  file_upload:
+    allowed_file_extensions:
+    - .JPG
+    - .JPEG
+    - .PNG
+    - .GIF
+    - .WEBP
+    - .SVG
+    - .MP4
+    - .MOV
+    - .MPEG
+    - .MPGA
+    allowed_file_types: []
+    allowed_file_upload_methods:
+    - remote_url
+    - local_file
+    enabled: false
+    image:
+      detail: high
+      enabled: false
+      number_limits: 3
+      transfer_methods:
+      - remote_url
+      - local_file
+    number_limits: 3
+  model:
+    completion_params:
+      stop: []
+    mode: chat
+    name: gemini-2.0-flash
+    provider: langgenius/gemini/google
+  more_like_this:
+    enabled: false
+  opening_statement: ''
+  pre_prompt: '<役割>
+
+    - あなたはインターネット開通事業者のサポート窓口エージェントです。
+
+
+    <制約>
+
+    - ユーザーが vpn に関係のない内容を入力した際、下記<拒否メッセージ>を加工しないでそのまま出力すること。
+
+    　<拒否メッセージ>
+
+    　こちらは開通工事専門の問い合わせ窓口です。開通工事に関連しない質問にはお答えできません。
+
+    - 返答に必要な情報はツール { Get Knowledge } を使用することで取得できる。
+
+    　ツール { Get Knowledge } で取得した情報は加工しないでそのまま出力すること。'
+  prompt_type: simple
+  retriever_resource:
+    enabled: true
+  sensitive_word_avoidance:
+    configs: []
+    enabled: false
+    type: ''
+  speech_to_text:
+    enabled: false
+  suggested_questions: []
+  suggested_questions_after_answer:
+    enabled: false
+  text_to_speech:
+    enabled: false
+    language: ''
+    voice: ''
+  user_input_form: []
+version: 0.1.5
