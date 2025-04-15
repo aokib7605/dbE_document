@@ -12,7 +12,23 @@ kind: app
 version: 0.1.5
 workflow:
   conversation_variables: []
-  environment_variables: []
+  environment_variables:
+  - description: ''
+    id: 6521c70b-4902-40e0-b622-01c340a5dd01
+    name: SECRET_KEY
+    selector:
+    - env
+    - SECRET_KEY
+    value: dataset-vjqeg9asxk3PZp7JND8hsjEF
+    value_type: string
+  - description: ''
+    id: cedcb860-366e-4acd-a5f1-54ebe3bab907
+    name: BASE_URL
+    selector:
+    - env
+    - BASE_URL
+    value: http://192.168.33.10/v1/datasets/<DATASET_ID>/retrieve
+    value_type: string
   features:
     file_upload:
       allowed_file_extensions:
@@ -61,18 +77,6 @@ workflow:
     - data:
         isInIteration: false
         isInLoop: false
-        sourceType: start
-        targetType: template-transform
-      id: 1744355059116-source-1744355063348-target
-      source: '1744355059116'
-      sourceHandle: source
-      target: '1744355063348'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
         sourceType: template-transform
         targetType: end
       id: 1744355063348-source-1744355265201-target
@@ -82,14 +86,74 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1744355059116-source-1744685855351-target
+      source: '1744355059116'
+      sourceHandle: source
+      target: '1744685855351'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: http-request
+      id: 1744685855351-source-1744685783668-target
+      source: '1744685855351'
+      sourceHandle: source
+      target: '1744685783668'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: 1744685783668-source-1744689552428-target
+      source: '1744685783668'
+      sourceHandle: source
+      target: '1744689552428'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: template-transform
+      id: 1744689552428-source-1744355063348-target
+      source: '1744689552428'
+      sourceHandle: source
+      target: '1744355063348'
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
     - data:
         desc: ''
         selected: false
         title: 開始
         type: start
-        variables: []
-      height: 54
+        variables:
+        - label: dataset_id
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: dataset_id
+        - label: keyword
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: keyword
+      height: 116
       id: '1744355059116'
       position:
         x: 80
@@ -97,6 +161,7 @@ workflow:
       positionAbsolute:
         x: 80
         y: 282
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -104,19 +169,22 @@ workflow:
     - data:
         desc: ''
         selected: false
-        template: "下記<メッセージ>の内容を加工しないでそのまま出力すること。\r\n\r\n<メッセージ>\r\n過去の事例より、関連性の高そうなものを抜粋して、解決策を提案致します。\r\
-          \n\r\n顧客idの登録に失敗している可能性があります。\r\n再度登録作業を行った後、端末の再起動を実施してみてください。"
+        template: "下記<メッセージ>の内容を加工しないでそのまま出力すること。\r\n\r\n<メッセージ>\r\n{{ data }}"
         title: メッセージ生成
         type: template-transform
-        variables: []
+        variables:
+        - value_selector:
+          - '1744689552428'
+          - data
+          variable: data
       height: 54
       id: '1744355063348'
       position:
-        x: 384
-        y: 282
+        x: 984
+        y: 395.47768032646877
       positionAbsolute:
-        x: 384
-        y: 282
+        x: 984
+        y: 395.47768032646877
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -129,23 +197,165 @@ workflow:
           - '1744355063348'
           - output
           variable: message
-        selected: true
+        selected: false
         title: 終了
         type: end
       height: 90
       id: '1744355265201'
       position:
-        x: 688
-        y: 282
+        x: 1312.2228466484653
+        y: 395.47768032646877
       positionAbsolute:
-        x: 688
-        y: 282
+        x: 1312.2228466484653
+        y: 395.47768032646877
       selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-269
+            key: ''
+            type: text
+            value: "{\n  \"query\": \"{{#1744355059116.keyword#}}\",\n  \"retrieval_model\"\
+              : {\n      \"search_method\": \"keyword_search\",\n      \"reranking_enable\"\
+              : false,\n      \"reranking_mode\": null,\n      \"reranking_model\"\
+              : {\n          \"reranking_provider_name\": \"\",\n          \"reranking_model_name\"\
+              : \"\"\n      },\n      \"weights\": null,\n      \"top_k\": 20,\n \
+              \     \"score_threshold_enabled\": false,\n      \"score_threshold\"\
+              : null\n  }\n}"
+          type: raw-text
+        desc: ''
+        headers: 'Authorization:Bearer {{#env.SECRET_KEY#}}
+
+          Content-Type:application/json'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: チャンク取得
+        type: http-request
+        url: '{{#1744685855351.url#}}'
+        variables: []
+      height: 122
+      id: '1744685783668'
+      position:
+        x: 684
+        y: 282
+      positionAbsolute:
+        x: 684
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(dataset_id: str, BASE_URL: str) -> dict:\n    return {\n\
+          \        \"url\": BASE_URL.replace('<DATASET_ID>', dataset_id)\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          url:
+            children: null
+            type: string
+        selected: false
+        title: リクエストURL生成
+        type: code
+        variables:
+        - value_selector:
+          - '1744355059116'
+          - dataset_id
+          variable: dataset_id
+        - value_selector:
+          - env
+          - BASE_URL
+          variable: BASE_URL
+      height: 54
+      id: '1744685855351'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\ndef main(body: str) -> dict:\n    body = body.replace('\"\
+          {', '{').replace('}\"', '}')\n    chunks = json.loads(body)\n    list =\
+          \ []\n    for data in chunks['records']:\n        list.append(data['segment']['content'])\n\
+          \    return {\n        \"data\": list\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          data:
+            children: null
+            type: array[string]
+        selected: false
+        title: チャンク抽出・整形
+        type: code
+        variables:
+        - value_selector:
+          - '1744685783668'
+          - body
+          variable: body
+      height: 54
+      id: '1744689552428'
+      position:
+        x: 984
+        y: 282
+      positionAbsolute:
+        x: 984
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: Aoki
+        desc: ''
+        height: 193
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<引数>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dataset_id
+          : ナレッジの dataset_id","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"keyword
+          : HTTPリクエストで使用するキーワード","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"<戻り値>","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dataset
+          : str","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 272
+      height: 193
+      id: '1744710153095'
+      position:
+        x: 80
+        y: 450.04692413488635
+      positionAbsolute:
+        x: 80
+        y: 450.04692413488635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 272
     viewport:
-      x: 0
-      y: 0
-      zoom: 1
+      x: 187.03412186963965
+      y: -8.03660571560522
+      zoom: 0.7578582832551997
